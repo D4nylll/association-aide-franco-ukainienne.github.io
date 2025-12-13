@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h2> Вход</h2>
+    
+    {% if form.errors %}
+        <div class="error-text" style="padding: 10px; border: 1px solid var(--accent); border-radius: 4px; margin-bottom: 20px; background: #ffebeb;">
+            Ваші ім'я користувача та пароль не збігаються. Спробуйте ще раз.
+        </div>
+    {% endif %}
+
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Имя пользователя:</label>
+            {{ form.username }}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Пароль:</label>
+            {{ form.password }}
+        </div>
+        
+        <button type="submit" class="btn primary-btn">Войти</button>
+        
+        </form>
+    
+    <p class="form-footer">Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+</div>
+{% endblock %}

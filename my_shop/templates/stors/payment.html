@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+    <h2 style="color: var(--success);">Заказ №{{ order.id }} создан!</h2>
+    <p>Сумма к оплате:</p>
+    <h1 style="font-size: 3rem; margin: 10px 0; color: var(--text);">{{ order.get_total_cost }} <span style="font-size: 1rem;">UAH</span></h1>
+    
+    <p style="color: #666; margin-bottom: 30px;">Нажмите кнопку ниже, чтобы оплатить через LiqPay.</p>
+
+    <form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
+        <input type="hidden" name="data" value="{{ liqpay_data }}" />
+        <input type="hidden" name="signature" value="{{ liqpay_signature }}" />
+        <button type="submit" style="background: #76c00f; color: white; font-size: 1.2rem; padding: 15px 40px; border: none; border-radius: 50px; cursor: pointer; transition: transform 0.2s;">
+             Оплатить картой
+        </button>
+    </form>
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'stors:prodli' %}" style="color: #999;">Вернуться в магазин</a>
+    </div>
+</div>
+{% endblock %}

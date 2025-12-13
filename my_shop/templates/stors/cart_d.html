@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Ваша Корзина</h2>
+
+{% if cart|length > 0 %}
+    <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 2px solid #eee; text-align: left;">
+                <th style="padding: 10px;">Товар</th>
+                <th>Цена</th>
+                <th>Кол-во</th>
+                <th>Всего</th>
+                <th>Действие</th>
+            </tr>
+            {% for item in cart %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 15px 10px;">{{ item.product.name }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total_price }}</td>
+                <td><a href="{% url 'cart_remove' item.product.id %}" style="color: var(--accent); text-decoration: none;">Удалить</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <div style="margin-top: 20px; text-align: right;">
+            <h3>Итого: <span style="color: var(--primary);">{{ cart.get_total_price }} UAH</span></h3>
+            <a href="{% url 'checkout' %}" class="btn" style="display: inline-block; width: auto; padding: 10px 30px;">Оформить заказ →</a>
+        </div>
+    </div>
+
+    {% if recommendations %}
+    <div class="rec-section">
+        <h3>Вам может понравиться </h3>
+        <div class="product-grid">
+            {% for product in recommendations %}
+            <div class="card">
+                <div class="card-img" style="background: #eee;"></div> <h4 class="card-title">{{ product.name }}</h4>
+                <p class="card-price">{{ product.price }} UAH</p>
+                <form action="{% url 'cart_add' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Добавить</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+{% else %}
+    <div style="text-align: center; padding: 50px;">
+        <h3>Корзина пуста </h3>
+        <a href="{% url 'product_list' %}" class="btn" style="width: 200px; margin: 0 auto;">Перейти в каталог</a>
+    </div>
+{% endif %}
+{% endblock %}

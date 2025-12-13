@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniShop Pro</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="logo">
+        <img src="{% static 'images/logo.png' %}">
+    </a>
+    <div class="nav-links">
+        <a href="{% url 'product_list' %}">Каталог</a>
+        <a href="{% url 'cart_detail' %}">
+            Корзина <span class="badge">{{ request|length }}</span>
+        </a>
+        {% if user.is_authenticated %}
+            <a href="#">{{ user.username }}</a>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">{% csrf_token %}
+                <button type="submit" style="background:none; border:none; cursor:pointer; color:inherit; font:inherit;">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Войти</a>
+        {% endif %}
+    </div>
+</nav>
+
+{% if messages %}
+    <div class="messages-container" style="position:fixed; top:20px; right:20px; z-index:1000;">
+        {% for message in messages %}
+            <div class="alert" style="background: white; padding: 15px; border-left: 5px solid #00b894; margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

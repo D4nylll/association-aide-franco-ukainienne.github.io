@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="layout">
+    <aside class="sidebar">
+        <h3>Поиск</h3>
+        <form method="get" style="margin-bottom: 20px;">
+            <input type="text" name="q" placeholder="Найти товар..." value="{{ request.GET.q }}" style="width: 100%; padding: 8px;">
+        </form>
+
+        <h3>Категории</h3>
+        <div class="filter-group">
+            <a href="{% url 'product_list' %}" style="font-weight: bold;">Все товары</a>
+            {% for cat in categories %}
+                <a href="?category={{ cat.slug }}">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+    </aside>
+
+    <section style="flex: 1;">
+        <h2>Товары</h2>
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img">
+                {% else %}
+                    <div class="card-img" style="display:flex; align-items:center; justify-content:center; color:#999;">Нет фото</div>
+                {% endif %}
+                
+                <h3 class="card-title">{{ product.name }}</h3>
+                <p class="card-price">{{ product.price }} UAH</p>
+                
+                <form action="{% url 'cart_add' product.id %}" method="post" class="add-to-cart-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">В корзину</button>
+                </form>
+            </div>
+            {% empty %}
+                <p>Товары не найдены.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="checkout-layout">
+    <div class="checkout-form-area">
+        <h2> Оформить заказ</h2>
+        <form method="post" id="checkoutForm">
+            {% csrf_token %}
+            
+            <h3>1. Контактніе данние</h3>
+            
+            <div class="form-group">
+                <label for="full_name">Полнео имя:</label>
+                <input type="text" id="full_name" name="full_name" 
+                       value="{{ default_full_name }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" 
+                       value="{{ default_email }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Телефон:</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+            
+            <button type="submit" class="btn primary-btn large-btn">
+                Подтвердить и перейти до оплаты
+            </button>
+        </form>
+    </div>
+
+    <div class="checkout-summary-area">
+        <h3>2. Ваш заказ ({{ cart|length }} товар)</h3>
+        
+        {% for item in cart %}
+        <div class="summary-item">
+            <span class="item-name">{{ item.product.name }}</span>
+            <span class="item-qty">x {{ item.quantity }}</span>
+            <span class="item-price">{{ item.total_price }} UAH</span>
+        </div>
+        {% endfor %}
+        
+        <hr class="summary-divider">
+        
+        <div class="summary-total">
+            <h4>До оплаты:</h4>
+            <h4 class="total-price-value">{{ cart.get_total_price }} UAH</h4>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/checkout.js' %}"></script>
+{% endblock %}
