@@ -8,7 +8,7 @@ from products.models import Product, Category, PoductImage
 from card.models import Order, OrderItem
 from card.cart import HybridCart
 from django.db.models import Q
-from card.utils import get_liqpay_context
+from payment.utils import get_liqpay_context
 from users.forms import UserRegistrationForm
 
 
@@ -45,30 +45,6 @@ def cart_detail(request):
         'recommendations': recommendations
     })
 
-
-@login_required
-def checkout(request):
-    cart = HybridCart(request)
-    if len(cart) == 0:
-        return redirect('product_list')
-
-    if request.method == 'POST':
-        order = Order.objects.create(
-            user=request.user,
-            full_name=request.POST.get('full_name'),
-            email=request.POST.get('email')
-        )
-        for item in cart:
-            OrderItem.objects.create(
-                order=order,
-                product=item['product'],
-                price=item['price'],
-                quantity=item['quantity']
-            )
-        cart.clear() 
-        return redirect('payment', order_id=order.id)
-        
-    return render(request, 'stors/checkout.html', {'cart': cart})
 
 
 def payment(request, order_id):
