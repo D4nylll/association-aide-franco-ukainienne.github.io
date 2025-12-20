@@ -9,7 +9,7 @@ def register(request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) 
+            login(request, user)
             messages.success(request, "Регистрация успешна!")
             return redirect('product_list')
     else:

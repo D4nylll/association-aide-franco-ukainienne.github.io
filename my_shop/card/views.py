@@ -56,3 +56,7 @@ def payment(request, order_id):
         'liqpay_data': liqpay_context['data'],
         'liqpay_signature': liqpay_context['signature']
     })
+
+
+def notNedded():
+    pass
