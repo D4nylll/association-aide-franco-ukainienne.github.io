@@ -10,6 +10,7 @@ from card.cart import HybridCart
 from django.db.models import Q
 from payment.utils import get_liqpay_context
 from users.forms import UserRegistrationForm
+import json
 
 
 @require_POST
@@ -20,6 +21,26 @@ def cart_add(request, product_id):
     messages.success(request, "Товар добавлен в корзину!")
     return redirect('product_list')
 
+
+@require_POST
+def card_add_product_detail(request):
+    if request.method == "POST":
+        data_json = json.loads(request.body)
+        product_id = data_json.get("product_id")
+        quantity = data_json.get("quantity")
+
+        #Зробити валідацію
+
+        cart = HybridCart(request)
+        try:
+            product = Product.objects.filter(id=product_id, available=True)
+        except Exception as ex:
+            print(ex)
+        cart.add(product=product, quantity=quantity)
+        messages.success(request, "Товар добавлен в корзину!")
+        return redirect('product_detail')
+    else:
+        return HttpResponse(403, "forbidden")
 
 def cart_remove(request, product_id):
     cart = HybridCart(request)
